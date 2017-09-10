@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
+
 using namespace std;
 
 struct node
@@ -8,7 +9,7 @@ struct node
     node *next, *prev;
 };
 
-/* Function to create a node and insert data */
+/* Function to create a node and insert data into DLL */
 void Insert(node **head, int d)
 {
     node *temp, *temp1;
@@ -68,6 +69,20 @@ void InsertDLL(node **head,int d, int position)
     }
 }
 
+/* Function to modify data of a node */
+void Modify(node **head,int d, int position)
+{
+    int k=1;
+    node *p;
+    p=*head;
+    while((p!=NULL) && (k<=position-1))
+    {
+        k++;
+        p=p->next;
+    }
+    p->data=d;
+}
+
 /* Function to delete a node from a specified position */
 void DeleteDLL(node **head,int position)
 {
@@ -100,72 +115,100 @@ void DeleteDLL(node **head,int position)
         else
         {
             q->next=p->next;
-            if(p->next)
-                p->next->prev=q;
+            if(p)
+                p->prev=q;
             free(p);
             return;
         }
     }
 }
 
-/* Function to print entire list */
-void PrintList(node *head)
+/* Function to traverse list in forward direction */
+void PrintListFor(node *head)
 {
-    node *temp = head;
-    while (temp != NULL)
-    {
-        cout<<temp->data;
-        temp = temp->next;
-    }
+    if (head == NULL)
+       return;
+    cout<<" "<<head->data;
+    PrintListFor(head->next);
+}
+
+/* Function to traverse list in reverse direction */
+void PrintListRev(node *head)
+{
+    if (head == NULL)
+       return;
+    PrintListRev(head->next);
+    cout<<" "<<head->data;
 }
 
 int main()
 {
-    node *x=NULL;
-    int e;
-    cout << "Enter the number of elements: ";
-    cin >> e;
-    cout << "Enter elements with a space: ";
-    while (e--)
-    {
-        int temp;
-        cin >> temp;
-        Insert(&x,temp);
-    }
-    cout << "List content: " << endl;
-    PrintList(x);
-    int a,pos,del,ch; char ch1;
+    node *z = NULL;
+    int ch; char ch1;
     start:
-    cout<<"\n\nDo you want to:\n1. Insert another element\n2. Delete an existing element\n";
+    cout<<"Do you want to:\n1.Create a new node/list\n2.Modify info of node\n3.Delete a node\n4.Traverse the list in forward direction\n5.Traverse the list in reverse direction\n";
     cin>>ch;
     switch(ch)
     {
     case 1:
-            cout<<"\nEnter element you want to insert: ";
-            cin>>a;
-            cout<<"Enter position: ";
-            cin>>pos;
-            InsertDLL(&x,a,pos);
-            cout << "New list content: " << endl;
-            PrintList(x);
+        {
+            int no, dat;
+            cout<<"Enter number of elements: ";
+            cin>>no;
+            cout<<"\nEnter the elements: ";
+            for(int i=0; i<no; i++)
+            {
+                cin>>dat;
+                Insert(&z,dat);
+            }
+            if(no==1)
+                cout<<"Node has been created";
+            else
+                cout<<"List has been created";
             break;
+        }
     case 2:
-            cout<<"\nEnter position of element you want to delete: ";
-            cin>>del;
-            DeleteDLL(&x,del);
-            cout << "New list content: " << endl;
-            PrintList(x);
+        {
+            int pos, newdat;
+            cout<<"Enter position of node whose data is to be modified: ";
+            cin>>pos;
+            cout<<"\nEnter new data to be inserted: ";
+            cin>>newdat;
+            Modify(&z,newdat,pos);
+            cout<<"\nNode's data has been modified.";
             break;
+        }
+    case 3:
+        {
+            int del;
+            cout<<"Enter position of node you want to delete: ";
+            cin>>del;
+            DeleteDLL(&z,del);
+            cout<<"\nNode has been successfully deleted.";
+            break;
+        }
+    case 4:
+        {
+            cout<<"List content in forward direction: \n";
+            PrintListFor(z);
+            break;
+        }
+    case 5:
+        {
+            cout<<"List content in reverse direction: \n";
+            PrintListRev(z);
+            break;
+        }
     default:
-            cout<<"Choose the correct option!";
+        {
+            cout<<"Enter the correct option!";
             goto start;
+        }
     }
-    cout<<"\n\nDo you want to insert or delete another element (y/n)?\n";
+    cout<<"\n\nDo you want to perform any operation again? (y/n)\n";
     cin>>ch1;
     if(ch1=='y')
-      goto start;
+        goto start;
     else
-      return 0;
+        return 0;
 }
-
-
