@@ -115,8 +115,8 @@ void DeleteDLL(node **head,int position)
         else
         {
             q->next=p->next;
-            if(p)
-                p->prev=q;
+            if(p->next)
+                p->next->prev=q;
             free(p);
             return;
         }
